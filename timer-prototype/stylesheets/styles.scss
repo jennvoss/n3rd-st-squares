@@ -1,0 +1,82 @@
+@import 'helpers';
+
+
+body {
+  font-family: helvetica, arial, sans-serif;
+  font-size: 100%;
+  color: black;
+  background-color: #ccc;
+}
+
+button {
+  margin: 1em;
+  padding: 1em;
+  min-width: 100px;
+  text-transform: uppercase;
+  border: 0;
+  // color: white;
+  // background-color: light-gray;
+}
+
+.container {
+  @include flexbox;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin: 0 auto;
+  width: 100%;
+  height: 100%;
+  max-width: 320px;
+  max-height: 480px;
+  text-align: center;
+  background-color: white;
+}
+
+.question,
+.answer {
+  display: none;
+}
+
+.points {
+  margin-bottom: 1em;
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.question {
+  .buttons {
+    @include flexbox;
+    -webkit-flex-flow: row wrap;
+  }
+  .buttons--top {
+    position: absolute;
+    top: 20px;
+    left: 0;
+  }
+  .buttons--top-r {
+    @extend .buttons--top;
+    left: auto;
+    right: 0;
+  }
+  .buttons--bottom {
+    @extend .buttons--top;
+    top: auto;
+    bottom: 20px;
+  }
+  .buttons--bottom-r {
+    @extend .buttons--bottom;
+    @extend .buttons--top-r;
+  }
+  .buttons--reverse {
+    flex-direction: row-reverse;
+  }
+  button {
+    font-weight: bold;
+  }
+  .true {
+    background-color: #66cc66;
+  }
+  .false {
+    background-color: #cc3333;
+  }
+}
