@@ -1,0 +1,5 @@
+# Ignore OSX Finder artifacts
+.DS_Store
+
+# Ignore SASS cache folder
+.sass-cache
