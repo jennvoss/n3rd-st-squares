@@ -1,22 +1,30 @@
 (function($) {
 
     // Apigee credentials
-    var apigeeClient = new Apigee.Client({
+    var dataClient = new Apigee.Client({
         orgName: 'jvoss', // Your organization name. You'll find this in the admin portal.
-        appName: 'n3rd-st-squares', // Your App Services app name. It's in the admin portal.
+        appName: 'sandbox', // Your App Services app name. It's in the admin portal.
         logging: false, // optional - turn on logging, off by default
         buildCurl: false // optional - log network calls in the console, off by default
     }),
-    apigeeGetURL = 'https://api.usergrid.com/' + apigeeClient.orgName + '/' + apigeeClient.appName + '/';
+    apigeeGetURL = 'https://api.usergrid.com/' + dataClient.orgName + '/' + dataClient.appName + '/';
 
 
     function createAccount() {
-        var getUsers = $.Deferred();
+        var getUsers = $.Deferred(),
+            options = {
+                endpoint: "users", //the collection to query
+                qs: {ql: "select username"} //the query string - note the use of the 'ql' property
+            };
 
         // query apigee for a list of all usernames
         // returns an array for each user entity with the username value at 0
-        $.get(apigeeGetURL + 'users?ql=select%20username')
-            .done(function(response) {
+        dataClient.request(options, function (error, response) {
+            if (error){
+                //error
+                console.log('error retrieving users');
+            } else {
+                //success
                 var users = response.list,
                     usernames = [],
                     user, i;
@@ -29,7 +37,9 @@
 
                 // resolve the getUsers deferred object with the list of usernames
                 getUsers.resolve(usernames);
-            });
+            }
+        });
+
 
         // add new user
         function addUser() {
@@ -50,10 +60,10 @@
                 }
 
                 // Call an SDK method to create a new user with data collected from the form.
-                apigeeClient.signup(userName, password, email, name, function (error, entity, data) {
+                dataClient.signup(userName, password, email, name, function (error, entity, data) {
                     if (error) {
                         var message = "Unable to add a user. " + data;
-                        apigeeClient.logError({tag:"addUser", logMessage:message});
+                        dataClient.logError({tag:"addUser", logMessage:message});
                     } else {
                         // User was added successfully
                         console.log('user successfully added');
